@@ -3,7 +3,7 @@ package router
 import (
 	"gin-first/config"
 	"gin-first/constant"
-	"gin-first/controllers"
+	"gin-first/controller"
 	"gin-first/response"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
@@ -26,25 +26,25 @@ func router(e *gin.Engine) {
 	{
 		userRouter := apiRouter.Group("user")
 		{
-			user := &controllers.UserController{}
+			user := &controller.UserController{}
 			userRouter.GET("list", user.GetUserList)
 			userRouter.GET("get/:id", user.GetUser)
 			userRouter.POST("add", user.AddUser)
 		}
 		bannerRouter := apiRouter.Group("banner")
 		{
-			banner := &controllers.BannerController{}
+			banner := &controller.BannerController{}
 			bannerRouter.GET("list", banner.GetBannerList)
 		}
 		chineseHerbRouter := apiRouter.Group("chineseHerb")
 		{
-			chineseHerb := &controllers.ChineseHerbController{}
+			chineseHerb := &controller.ChineseHerbController{}
 			chineseHerbRouter.GET("list", chineseHerb.GetChineseHerbList)
 			chineseHerbRouter.GET("get/:id", chineseHerb.GetChineseHerb)
 		}
 		uploadRouter := apiRouter.Group("upload")
 		{
-			upload := &controllers.UploadController{}
+			upload := &controller.UploadController{}
 			uploadRouter.GET("img", upload.UploadImg)
 		}
 	}
