@@ -2,15 +2,37 @@ package middleware
 
 import (
 	"gin-first/config"
+	"github.com/gin-contrib/i18n"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/text/language"
+	"gopkg.in/yaml.v3"
 	"net/http"
 )
 
 // 注册中间件
 func RegistMiddleWare(e *gin.Engine) {
-	e.Use(Cors(), Session(), Auth())
+	e.Use(Cors(), Session(), Auth(), i18n.Localize(i18n.WithBundle(&i18n.BundleCfg{
+		RootPath:         "../conf/locale",
+		AcceptLanguage:   []language.Tag{language.Chinese, language.English},
+		DefaultLanguage:  language.Chinese,
+		FormatBundleFile: "yaml",
+		UnmarshalFunc:    yaml.Unmarshal,
+	}), i18n.WithGetLngHandle(func(context *gin.Context, defaultLang string) string {
+		if context == nil || context.Request == nil {
+			return defaultLang
+		}
+		lang := context.Query("lang")
+		if lang != "" {
+			return lang
+		}
+		lang = context.GetHeader("Accept-Language")
+		if lang != "" {
+			return lang
+		}
+		return defaultLang
+	})))
 }
 
 // session
